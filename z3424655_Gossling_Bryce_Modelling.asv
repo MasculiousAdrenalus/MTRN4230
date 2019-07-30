@@ -1,0 +1,28 @@
+%% Bryce Gossling z3424655
+close all;clear all;clc;
+
+%undistort Image
+load('cameraParams.mat');
+board = imread('Images/blank_image2.jpg');
+undistortedImage = undistortImage(board, cameraParams);
+board = undistortedImage;
+I = rgb2gray(board);
+imshow(board);
+
+startup_rvc
+
+%% Q1 DH table 
+% [theta d a alpha sigma offset] sigma=0 revolute, 1 prismatic joint
+L(1) = Link([0 0.29  0     pi/2    0   pi ], 'standard');        % L link 2 
+L(2) = Link([0   0   0.27     0     0  pi/2], 'standard');        % L link 3 
+L(3) = Link([0   0   0.07   -pi/2   0   0  ], 'standard');        % L link 4 
+L(4) = Link([0 0.302  0     pi/2    0   0  ], 'standard');        % L link 5 
+L(5) = Link([0   0    0     pi/2    0   pi ], 'standard');        % L link 6
+L(6) = Link([0 0.137   0      0     0   0  ], 'standard');        % L link 6
+
+
+ABB_IRB120 = SerialLink(L, 'name', 'abb irb120');
+home_pos = [0, 0, 0, 0, 0, 0];            % all 0 angles
+ABB_IRB120.plot(home_pos)                 % robot facing x direction 
+
+
